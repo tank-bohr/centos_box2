@@ -1,0 +1,29 @@
+- set_fact:
+    elastic_version: 2.2.0
+- set_fact:
+    elastic_distrname: "elasticsearch-{{ elastic_version }}"
+
+- name: Fetch
+  unarchive:
+    src: "https://download.elasticsearch.org/elasticsearch/release/org/elasticsearch/distribution/tar/elasticsearch/{{ elastic_version }}/{{ elastic_distrname }}.tar.gz"
+    dest: "{{ user_home }}"
+    copy: no
+    owner: "{{ user }}"
+    group: "{{ user }}"
+    creates: "{{ user_home }}/{{ elastic_distrname }}"
+
+- name: Set PATH environment variable
+  lineinfile:
+    dest: '{{ zshrc }}'
+    line: export PATH="$HOME/{{ elastic_distrname }}/bin:$PATH"
+    state: present
+
+# - name: Install plugins
+#   elasticsearch_plugin:
+#     name: "{{ item }}"
+#     state: present
+#     plugin_bin: "{{ user_home }}/{{ elastic_distrname }}/bin/plugin"
+#     plugin_dir: "{{ user_home }}/{{ elastic_distrname }}/plugins"
+#   with_items:
+#     - analysis-phonetic
+#     - analysis-icu

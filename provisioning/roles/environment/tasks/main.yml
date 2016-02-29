@@ -1,0 +1,52 @@
+- name: Install deps
+  yum: pkg={{ item }} state=latest
+  with_items:
+    - gcc
+    - gcc-c++
+    - patch
+    - zip
+    - unzip
+    - redis
+    - sphinx
+    - mariadb-server
+    - mariadb-devel
+    - libcurl-devel
+    - libyaml-devel
+    - libxml2-devel
+    - libxslt-devel
+    - java-1.8.0-openjdk
+    - ImageMagick-devel
+
+- name: Install MongoDB
+  copy:
+    content: |
+      [mongodb-org-3.2]
+      name=MongoDB Repository
+      baseurl=https://repo.mongodb.org/yum/redhat/$releasever/mongodb-org/3.2/x86_64/
+      gpgcheck=0
+      enabled=1
+    dest: /etc/yum.repos.d/mongodb-org-3.2.repo
+- yum: pkg={{ item }} state=latest
+  with_items:
+    - mongodb-org
+
+- name: Start services
+  service: name={{ item }} state=started enabled=yes
+  with_items:
+    - mariadb.service
+    - redis.service
+    - mongod.service
+
+- name: Copy configs
+  copy:
+    src: "{{ item }}"
+    dest: "{{ user_home }}"
+    owner: "{{ user }}"
+    group: "{{ user }}"
+  with_items:
+    - .gemrc
+    - .gitconfig
+
+- include: ruby.yml
+- include: nodejs.yml
+- include: elastic.yml

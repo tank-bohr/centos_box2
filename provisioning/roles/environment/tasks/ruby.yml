@@ -1,0 +1,50 @@
+- set_fact:
+    ruby_ver: 2.1.8
+
+- name: Fetch
+  unarchive:
+    src: https://cache.ruby-lang.org/pub/ruby/2.1/ruby-{{ ruby_ver }}.tar.gz
+    dest: "{{ user_home }}"
+    copy: no
+    owner: "{{ user }}"
+    group: "{{ user }}"
+    creates: "{{ user_home }}/ruby-{{ ruby_ver }}"
+
+- name: Exchange folders
+  command: mv "{{ user_home }}/ruby-{{ ruby_ver }}" "{{ user_home }}/ruby-{{ ruby_ver }}.src"
+  args:
+    creates: "{{ user_home }}/ruby-{{ ruby_ver }}.src"
+    removes: "{{ user_home }}/ruby-{{ ruby_ver }}"
+
+- name: Create prefix dir
+  file:
+    owner: "{{ user }}"
+    group: "{{ user }}"
+    path: "{{ user_home }}/ruby-{{ ruby_ver }}"
+    state: directory
+
+- name: Configure
+  command: ./configure --prefix="{{ user_home }}/ruby-{{ ruby_ver }}" --disable-install-doc
+  args:
+    chdir: "{{ user_home }}/ruby-{{ ruby_ver }}.src"
+    creates: "{{ user_home }}/ruby-{{ ruby_ver }}.src/Makefile"
+
+- name: Build
+  command: make install
+  args:
+    chdir: "{{ user_home }}/ruby-{{ ruby_ver }}.src"
+    creates: "{{ user_home }}/ruby-{{ ruby_ver }}/bin/ruby"
+
+- name: Chown ruby dir
+  file:
+    owner: "{{ user }}"
+    group: "{{ user }}"
+    path: "{{ user_home }}/ruby-{{ ruby_ver }}"
+    state: directory
+    recurse: yes
+
+- name: Set PATH environment variable
+  lineinfile:
+    dest: '{{ zshrc }}'
+    line: export PATH="$HOME/ruby-{{ ruby_ver }}/bin:$PATH"
+    state: present
