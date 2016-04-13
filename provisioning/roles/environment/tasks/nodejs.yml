@@ -1,5 +1,6 @@
 - set_fact:
     nodejs_version: "v5.10.1"
+- set_fact:
     nodejs_distrname: "node-{{ nodejs_version }}-linux-x64"
 
 # Ansible in Centos-7.2 is 1.9 So we cannot pass url to `unarchive` module
