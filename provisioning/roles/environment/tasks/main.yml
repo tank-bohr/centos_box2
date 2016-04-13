@@ -43,16 +43,6 @@
     - redis.service
     - mongod.service
 
-- name: Copy configs
-  copy:
-    src: "{{ item }}"
-    dest: "{{ user_home }}"
-    owner: "{{ user }}"
-    group: "{{ user }}"
-  with_items:
-    - .gemrc
-    - .gitconfig
-
 - include: ruby.yml
 - include: nodejs.yml
 - include: elastic.yml
