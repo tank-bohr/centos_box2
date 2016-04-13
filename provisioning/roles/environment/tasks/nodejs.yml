@@ -1,9 +1,16 @@
 - set_fact:
     nodejs_distrname: "node-v5.7.0-linux-x64"
 
+# Ansible in Centos-7.2 is 1.9 So we cannot pass url to `unarchive` module
+- name: Download node sources
+  get_url:
+    url: https://nodejs.org/dist/v5.7.0/{{ nodejs_distrname }}.tar.xz
+    dest: /tmp
+
 - name: Fetch
   unarchive:
-    src: https://nodejs.org/dist/v5.7.0/{{ nodejs_distrname }}.tar.xz
+    # src: https://nodejs.org/dist/v5.7.0/{{ nodejs_distrname }}.tar.xz
+    src: /tmp/{{ nodejs_distrname }}.tar.xz
     dest: "{{ user_home }}"
     copy: no
     owner: "{{ user }}"

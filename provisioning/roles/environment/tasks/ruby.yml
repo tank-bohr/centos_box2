@@ -1,9 +1,17 @@
 - set_fact:
-    ruby_ver: 2.1.8
+    ruby_ver: 2.1.9
+
+# Ansible in Centos-7.2 is 1.9 So we cannot pass url to `unarchive` module
+- name: Download ruby source
+  get_url:
+    url: https://cache.ruby-lang.org/pub/ruby/2.1/ruby-{{ ruby_ver }}.tar.gz
+    dest: /tmp
+    sha256sum: 034cb9c50676d2c09b3b6cf5c8003585acea05008d9a29fa737c54d52c1eb70c
 
 - name: Fetch
   unarchive:
-    src: https://cache.ruby-lang.org/pub/ruby/2.1/ruby-{{ ruby_ver }}.tar.gz
+    # src: https://cache.ruby-lang.org/pub/ruby/2.1/ruby-{{ ruby_ver }}.tar.gz
+    src: /tmp/ruby-{{ ruby_ver }}.tar.gz
     dest: "{{ user_home }}"
     copy: no
     owner: "{{ user }}"

@@ -3,9 +3,16 @@
 - set_fact:
     elastic_distrname: "elasticsearch-{{ elastic_version }}"
 
+# Ansible in Centos-7.2 is 1.9 So we cannot pass url to `unarchive` module
+- name: Download elastic sources
+  get_url:
+    url: "https://download.elasticsearch.org/elasticsearch/release/org/elasticsearch/distribution/tar/elasticsearch/{{ elastic_version }}/{{ elastic_distrname }}.tar.gz"
+    dest: /tmp
+
 - name: Fetch
   unarchive:
-    src: "https://download.elasticsearch.org/elasticsearch/release/org/elasticsearch/distribution/tar/elasticsearch/{{ elastic_version }}/{{ elastic_distrname }}.tar.gz"
+    # src: "https://download.elasticsearch.org/elasticsearch/release/org/elasticsearch/distribution/tar/elasticsearch/{{ elastic_version }}/{{ elastic_distrname }}.tar.gz"
+    src: "/tmp/{{ elastic_distrname }}.tar.gz"
     dest: "{{ user_home }}"
     copy: no
     owner: "{{ user }}"

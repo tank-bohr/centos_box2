@@ -12,7 +12,7 @@ Vagrant.configure(2) do |config|
 
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://atlas.hashicorp.com/search.
-  config.vm.box = "grtjn/centos-7.1"
+  config.vm.box = "grtjn/centos-7.2"
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
@@ -42,7 +42,6 @@ Vagrant.configure(2) do |config|
   # the path on the guest to mount the folder. And the optional third
   # argument is a set of non-required options.
   # config.vm.synced_folder "../data", "/vagrant_data"
-  # config.vm.synced_folder 'repos', '/home/vagrant/repos', type: :smb
 
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. These expose provider-specific options.
@@ -80,22 +79,11 @@ Vagrant.configure(2) do |config|
   #   sudo apt-get update
   #   sudo apt-get install -y apache2
   # SHELL
-  config.vm.provision :shell, privileged: false, keep_color: true, inline: <<-SHELL
-sudo yum install -y gcc git python-devel
-sudo easy_install pip
-sudo pip install paramiko PyYAML Jinja2 httplib2 six
-if [-d ansible]; then
-  git pull --rebase
-  git submodule update --init --recursive
-else
-  git clone git://github.com/ansible/ansible.git --recursive
-fi
-cd ./ansible
-source ./hacking/env-setup
-cd -
-cp -r /vagrant/provisioning ./
-cd provisioning
-echo "localhost ansible_connection=local" > inventory
-ansible-playbook -i inventory -vv playbook.yml
-SHELL
+
+  config.vm.provision "ansible_local" do |ansible|
+    # ansible.install = true
+    # ansible.version = 'latest'
+    ansible.verbose = true
+    ansible.playbook = "provisioning/playbook.yml"
+  end
 end
