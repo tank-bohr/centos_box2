@@ -51,6 +51,12 @@
     state: directory
     recurse: yes
 
+- name: Install bundler
+  gem:
+    name: bundler
+    executable: "{{ user_home }}/ruby-{{ ruby_ver }}/bin/gem"
+    user_install: no
+
 - name: Set PATH environment variable
   lineinfile:
     dest: '{{ zshrc }}'

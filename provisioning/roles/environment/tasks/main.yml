@@ -29,7 +29,9 @@
       gpgcheck=0
       enabled=1
     dest: /etc/yum.repos.d/mongodb-org-3.2.repo
+
 - yum: pkg={{ item }} state=latest
+  become: yes
   with_items:
     - mongodb-org
 

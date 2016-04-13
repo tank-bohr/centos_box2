@@ -1,5 +1,5 @@
 - set_fact:
-    elastic_version: 2.2.0
+    elastic_version: 2.3.1
 - set_fact:
     elastic_distrname: "elasticsearch-{{ elastic_version }}"
 
@@ -34,3 +34,17 @@
 #   with_items:
 #     - analysis-phonetic
 #     - analysis-icu
+
+- name: Ensure plugins dir
+  file:
+    path: "{{ user_home }}/{{ elastic_distrname }}/plugins"
+    owner: "{{ user }}"
+    group: "{{ user }}"
+    state: directory
+
+- name: Install plugins
+  command: "{{ user_home }}/{{ elastic_distrname }}/bin/plugin install {{ item }}"
+  ignore_errors: yes
+  with_items:
+    - analysis-phonetic
+    - analysis-icu

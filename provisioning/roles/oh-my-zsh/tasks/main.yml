@@ -8,17 +8,15 @@
     - zsh
 
 - name: oh-my-zsh
-  become: no
   git: repo=https://github.com/robbyrussell/oh-my-zsh.git dest={{ user_home }}/.oh-my-zsh
 
 - name: .zshrc
-  become: no
   template: src=.zshrc.j2 dest={{ zshrc }} owner={{ user }}
 
 - name: find zsh
-  become: no
   command: which zsh
   register: which_zsh
 
 - name: set zsh as default shell
+  become: yes
   user: name={{ user }} shell={{ which_zsh.stdout }}
