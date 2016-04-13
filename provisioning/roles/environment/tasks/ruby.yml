@@ -32,7 +32,7 @@
     state: directory
 
 - name: Configure
-  command: ./configure --prefix="{{ user_home }}/ruby-{{ ruby_ver }}" --disable-install-doc
+  command: ./configure --prefix="{{ user_home }}/ruby-{{ ruby_ver }}" --with-readline --disable-install-doc
   args:
     chdir: "{{ user_home }}/ruby-{{ ruby_ver }}.src"
     creates: "{{ user_home }}/ruby-{{ ruby_ver }}.src/Makefile"

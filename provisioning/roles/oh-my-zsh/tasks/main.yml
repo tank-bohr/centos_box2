@@ -1,5 +1,6 @@
 ---
 - name: packages
+  become: yes
   yum: pkg={{ item }} state=latest
   with_items:
     - libselinux-python
@@ -7,15 +8,15 @@
     - zsh
 
 - name: oh-my-zsh
-  become: False
+  become: no
   git: repo=https://github.com/robbyrussell/oh-my-zsh.git dest={{ user_home }}/.oh-my-zsh
 
 - name: .zshrc
-  become: False
+  become: no
   template: src=.zshrc.j2 dest={{ zshrc }} owner={{ user }}
 
 - name: find zsh
-  become: False
+  become: no
   command: which zsh
   register: which_zsh
 

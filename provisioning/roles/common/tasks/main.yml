@@ -1,5 +1,6 @@
 ---
 - name: Usefull stuff
+  become: yes
   yum: pkg={{ item }} state=latest
   with_items:
     - mc

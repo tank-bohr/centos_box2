@@ -1,4 +1,5 @@
 - name: Install deps
+  become: yes
   yum: pkg={{ item }} state=latest
   with_items:
     - gcc
@@ -19,6 +20,7 @@
     - ImageMagick-devel
 
 - name: Install MongoDB
+  become: yes
   copy:
     content: |
       [mongodb-org-3.2]
@@ -32,6 +34,7 @@
     - mongodb-org
 
 - name: Start services
+  become: yes
   service: name={{ item }} state=started enabled=yes
   with_items:
     - mariadb.service
